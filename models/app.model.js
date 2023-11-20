@@ -28,3 +28,9 @@ exports.getArticleById = (id) => {
         WHERE article_id = $1
     `, [id])
 }
+
+exports.findAllArticles = () => {
+    return db.query(`
+        SELECT * FROM articles
+    `)
+}

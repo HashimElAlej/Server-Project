@@ -1,7 +1,8 @@
 const {
     selectTopics,
     checkEndpoints,
-    getArticleById
+    getArticleById,
+    findAllArticles
 } = require("../models/app.model");
 
 exports.getTopics = (req, res) => {
@@ -17,8 +18,14 @@ exports.getApi = (req, res) => {
 }
 
 exports.getArticle = (req, res) => {
-    const { article_id } = req.params
-    getArticleById(article_id).then(({ rows }) => {
-        res.status(200).send(rows);
-    });
+    if (req.params.article_id) {
+        const { article_id } = req.params
+        getArticleById(article_id).then(({ rows }) => {
+            res.status(200).send(rows);
+        });
+    } else {
+        findAllArticles().then(({rows}) => {
+            res.status(200).send(rows);
+        })
+    }
 }

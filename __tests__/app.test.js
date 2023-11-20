@@ -44,11 +44,23 @@ describe("Test for GET API", () => {
             .get("/api/articles/1")
             .expect(200)
             .then(({body}) => {
-                const sql = db.query(`
+                const sqlQuery = db.query(`
                     SELECT * FROM articles
-                    WHERE articles_id = 1
+                    WHERE article_id = 1
                 `)
-                expect(body[0]).toMatchObject(sql);
+                expect(body[0]).toMatchObject(sqlQuery);
+            })
+    })
+
+    test("GET /api/articles/ should return list of all articles", () => {
+        return request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then(({body}) => {
+                const sqlQuery = db.query(`
+                    SELECT * FROM articles
+                `)
+                expect(body[0]).toMatchObject(sqlQuery);
             })
     })
 });

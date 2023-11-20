@@ -15,4 +15,6 @@ app.get("/api", getApi)
 
 app.get("/api/articles/:article_id", getArticle)
 
+app.get("/api/articles", getArticle)
+
 module.exports = app;
