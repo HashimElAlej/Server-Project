@@ -1,3 +1,9 @@
-# Northcoders News API
+# News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+When using this respository, create two .env files:
+.env.development
+.env.test
+
+this will allow you to succesfully connect to the database's locally.
+
+
