@@ -21,3 +21,10 @@ exports.checkEndpoints = () => {
         console.error(error);
       });
 }
+
+exports.getArticleById = (id) => {
+    return db.query(`
+        SELECT * FROM articles
+        WHERE article_id = $1
+    `, [id])
+}

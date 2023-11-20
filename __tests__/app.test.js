@@ -38,4 +38,17 @@ describe("Test for GET API", () => {
                     });
             })
     })
+
+    test("GET /api/articles/:article_id finds an article with the corresponding ID from its endpoint", () => {
+        return request(app)
+            .get("/api/articles/1")
+            .expect(200)
+            .then(({body}) => {
+                const sql = db.query(`
+                    SELECT * FROM articles
+                    WHERE articles_id = 1
+                `)
+                expect(body[0]).toMatchObject(sql);
+            })
+    })
 });
