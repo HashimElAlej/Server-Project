@@ -129,3 +129,51 @@ describe("Test for GET API", () => {
         })
     })
 });
+
+describe.only("Test for POST API", () => {
+    test("Status 200: POST /api/articles/:article_id/comments", () => {
+        const newComment = {
+            body: "I don't quite agree with that",
+            votes: 120,
+            author: "butter_bridge",
+            article_id: 1,
+            created_at: "2023-11-21T11:57:29.253Z",
+          }
+
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.comment[0]['body']).toBe("I don't quite agree with that")
+            expect(body.comment[0]['comment_id']).toBe(19)
+            expect(body.comment[0]['article_id']).toBe(1)
+            expect(body.comment[0]['votes']).toBe(120)
+            expect(body.comment[0]['author']).toBe("butter_bridge")
+            expect(body.comment[0]['created_at']).toBe("2023-11-21T11:57:29.253Z")
+        })
+    })
+
+    test("Status 200: POST /api/articles/:article_id/comments", () => {
+        const newComment = {
+            body: "I don't quite agree with that",
+            votes: 120,
+            author: "butter_bridge",
+            article_id: 1,
+            created_at: "2023-11-21T11:57:29.253Z",
+          }
+
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.comment[0]['body']).toBe("I don't quite agree with that")
+            expect(body.comment[0]['comment_id']).toBe(19)
+            expect(body.comment[0]['article_id']).toBe(1)
+            expect(body.comment[0]['votes']).toBe(120)
+            expect(body.comment[0]['author']).toBe("butter_bridge")
+            expect(body.comment[0]['created_at']).toBe("2023-11-21T11:57:29.253Z")
+        })
+    })
+})

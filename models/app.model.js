@@ -40,17 +40,27 @@ exports.findAllArticles = () => {
     GROUP BY articles.article_id,articles.title,articles.topic,articles.author,articles.body,articles.created_at,articles.votes,articles.article_img_url
     ORDER BY created_at DESC;
     `)
-    .then(({ rows }) => {
-        return rows
-    })
+        .then(({ rows }) => {
+            return rows
+        })
 }
 
 exports.findAllCommentsFromArticle = (id) => {
     return db.query(`
         SELECT * FROM comments
         WHERE article_id = $1;
-    `,[id])
-    .then(({ rows }) => {
-        return rows
-    })
+    `, [id])
+        .then(({ rows }) => {
+            return rows
+        })
 }
+
+exports.addCommentToArticle = (comment) => {
+    return db.query(`
+        INSERT INTO comments (body, author, article_id, votes, created_at)
+        VALUES ($1, $2, $3, $4, $5) RETURNING *;
+        `, [comment.body, comment.author, comment.article_id, comment.votes, comment.created_at])
+    .then(({ rows }) => {
+            return rows;
+    })
+};

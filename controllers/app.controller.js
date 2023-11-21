@@ -3,7 +3,8 @@ const {
     checkEndpoints,
     selectArticleById,
     findAllArticles,
-    findAllCommentsFromArticle
+    findAllCommentsFromArticle,
+    addCommentToArticle
 } = require("../models/app.model");
 
 exports.getTopics = (req, res, next) => {
@@ -47,6 +48,17 @@ exports.getCommentsFromArticle = (req, res, next) => {
     const { article_id } = req.params
     findAllCommentsFromArticle(article_id).then((comments) => {
         res.status(200).send({comments, article_id});
+    })
+    .catch((err) => {
+        next(err)
+    });
+}
+
+exports.postCommentToArticle = (req, res, next) => {
+    const { body } = req
+    addCommentToArticle(body).then((comment) => {
+        console.log('1')
+        res.status(201).send({comment});
     })
     .catch((err) => {
         next(err)
