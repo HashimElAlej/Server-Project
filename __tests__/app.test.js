@@ -225,7 +225,7 @@ describe("Test for POST API", () => {
     })
 })
 
-describe.only("patch", () => {
+describe("patch", () => {
     test("Status 200: updates with the new votes count", () => {
 
         const newVote = { inc_votes: -100 }
