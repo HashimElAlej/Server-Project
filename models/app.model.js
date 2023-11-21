@@ -51,6 +51,10 @@ exports.findAllCommentsFromArticle = (id) => {
         WHERE article_id = $1;
     `,[id])
     .then(({ rows }) => {
+        if (!rows.length) {
+            return Promise.reject({ status: 404, msg: 'Article does not exist' })
+        }
+    
         return rows
     })
 }

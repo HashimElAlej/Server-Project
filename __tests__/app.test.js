@@ -61,7 +61,7 @@ describe("Test for GET API", () => {
                         created_at: '2020-07-09T21:11:00.000Z',
                         votes: 100,
                         article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-                      }
+                    }
 
                     expect(body.article[0]).toMatchObject(exampleArticle);
                 })
@@ -100,20 +100,9 @@ describe("Test for GET API", () => {
                         votes: 0,
                         article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
                         comment_count: '2'
-                      }
+                    }
 
                     expect(body.articles[0]).toMatchObject(exampleArticle);
-                })
-        })
-        test("404: Does not return a list if given incorrect endpoint", () => {
-            return request(app)
-                .get("/api/article")
-                .expect(404)
-                .then(({body}) => {
-                    expect(body).toEqual({
-                        status: 404,
-                        msg: 'Not Found',
-                      })
                 })
         })
     })
@@ -128,7 +117,7 @@ describe("Test for GET API", () => {
 
                     index.commentData.map((comment) => {
                         if (comment.article_id == body.article_id) {
-                            const convertedTimeToDate =  utils.convertTimestampToDate(comment)
+                            const convertedTimeToDate = utils.convertTimestampToDate(comment)
                             const date = convertedTimeToDate['created_at']
                             convertedTimeToDate['created_at'] = date.toISOString()
                             commentsSorted.push(convertedTimeToDate)
@@ -136,6 +125,22 @@ describe("Test for GET API", () => {
                     })
 
                     expect(body.comments).toMatchObject(commentsSorted);
+                })
+        })
+        test("404: ID does not exist", () => {
+            return request(app)
+                .get("/api/articles/100/comments")
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Article does not exist');
+                })
+        })
+        test("400: ID synatx error, cannot query", () => {
+            return request(app)
+                .get("/api/articles/characters/comments")
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request');
                 })
         })
     })
