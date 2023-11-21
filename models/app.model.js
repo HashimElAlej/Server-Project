@@ -55,12 +55,18 @@ exports.findAllCommentsFromArticle = (id) => {
         })
 }
 
-exports.addCommentToArticle = (comment) => {
-    return db.query(`
+exports.addCommentToArticle = (comment, id) => {
+        return db.query(`
         INSERT INTO comments (body, author, article_id, votes, created_at)
         VALUES ($1, $2, $3, $4, $5) RETURNING *;
-        `, [comment.body, comment.author, comment.article_id, comment.votes, comment.created_at])
-    .then(({ rows }) => {
-            return rows;
-    })
+        `, [comment.body, comment.author, comment.article_id, comment.votes, comment.created_at])  
+    .then(( {rows} ) => {
+        if (id != comment.article_id) {
+            return Promise.reject({ status: 404, msg: 'Article does not exist' })
+        }
+        if (!rows.length) {
+            return Promise.reject({ status: 404, msg: 'Article does not exist' })
+        }
+            return rows
+        })
 };

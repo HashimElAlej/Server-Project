@@ -55,9 +55,9 @@ exports.getCommentsFromArticle = (req, res, next) => {
 }
 
 exports.postCommentToArticle = (req, res, next) => {
+    const { article_id } = req.params
     const { body } = req
-    addCommentToArticle(body).then((comment) => {
-        console.log('1')
+    addCommentToArticle(body, article_id).then((comment) => {
         res.status(201).send({comment});
     })
     .catch((err) => {
