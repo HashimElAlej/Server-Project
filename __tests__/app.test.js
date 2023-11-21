@@ -146,7 +146,7 @@ describe("Test for GET API", () => {
     })
 });
 
-describe.only("Test for POST API", () => {
+describe("Test for POST API", () => {
     test("Status 201: POST /api/articles/:article_id/comments", () => {
         const newComment = {
             body: "I don't quite agree with that",
