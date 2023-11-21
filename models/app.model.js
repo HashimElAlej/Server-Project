@@ -82,3 +82,17 @@ exports.addCommentToArticle = (comment, id) => {
             return rows
         })
 };
+
+exports.updateVotes = (votes,id) => {
+    return db.query(`
+    UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2 RETURNING *
+    `, [votes.inc_votes, id])  
+.then(( {rows} ) => {
+    if (!rows.length) {
+        return Promise.reject({ status: 404, msg: 'Article does not exist' })
+    }
+        return rows
+    })
+};
