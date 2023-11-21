@@ -107,7 +107,7 @@ describe("Test for GET API", () => {
         })
     })
 
-    describe.only("GET /api/articles/:article_id/comments", () => {
+    describe("GET /api/articles/:article_id/comments", () => {
         test("Returns all comments from given article with status code 200", () => {
             return request(app)
                 .get("/api/articles/1/comments")
