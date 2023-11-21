@@ -47,14 +47,22 @@ exports.findAllArticles = () => {
 
 exports.findAllCommentsFromArticle = (id) => {
     return db.query(`
-        SELECT * FROM comments
+        SELECT * FROM articles
         WHERE article_id = $1;
     `,[id])
-    .then(({ rows }) => {
+    .then(( {rows} ) => {
         if (!rows.length) {
             return Promise.reject({ status: 404, msg: 'Article does not exist' })
         }
-    
+        return rows
+    })
+    .then((rows) => {
+    return db.query(`
+        SELECT * FROM comments
+        WHERE article_id = $1;
+        `,[id])
+    })
+    .then(({rows}) => {
         return rows
     })
 }
