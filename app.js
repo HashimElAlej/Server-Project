@@ -6,7 +6,8 @@ const {
   getArticles,
   getArticleById,
   getCommentsFromArticle,
-  postCommentToArticle
+  postCommentToArticle,
+  patchArticle
 } = require("./controllers/app.controller");
 
 const app = express();
@@ -24,6 +25,8 @@ app.get("/api/articles", getArticles)
 app.get("/api/articles/:article_id/comments", getCommentsFromArticle)
 
 app.post("/api/articles/:article_id/comments", postCommentToArticle)
+
+app.patch("/api/articles/:article_id", patchArticle)
 
 app.use(handlePsqlErrors)
 app.use(handleCustomErrors)

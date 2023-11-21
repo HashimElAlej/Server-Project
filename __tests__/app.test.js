@@ -224,3 +224,58 @@ describe("Test for POST API", () => {
         })
     })
 })
+
+describe.only("patch", () => {
+    test("Status 200: updates with the new votes count", () => {
+
+        const newVote = { inc_votes: -100 }
+
+        return request(app)
+        .patch("/api/articles/1")
+        .send(newVote)
+        .expect(200)
+        .then(({ body }) => {
+
+            const updatedArticle = {
+                article_id: 1,
+                title: 'Living in the shadow of a great man',
+                topic: 'mitch',
+                author: 'butter_bridge',
+                body: 'I find this existence challenging',
+                created_at: '2020-07-09T21:11:00.000Z',
+                votes: 0,
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+              }
+
+            expect(body[0]).toMatchObject(updatedArticle)
+        })
+    })
+
+    test("Status 400: Incorrect endpoint ID", () => {
+
+        const newVote = { inc_votes: -100 }
+
+        return request(app)
+        .patch("/api/articles/not-an-id")
+        .send(newVote)
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Bad request')
+
+        })
+    })
+
+    test("Status 404: cannot query non-existing ID", () => {
+
+        const newVote = { inc_votes: -100 }
+
+        return request(app)
+        .patch("/api/articles/100000")
+        .send(newVote)
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Article does not exist')
+
+        })
+    })
+})
