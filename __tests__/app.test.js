@@ -105,6 +105,17 @@ describe("Test for GET API", () => {
                     expect(body.articles[0]).toMatchObject(exampleArticle);
                 })
         })
+        test("404: Does not return a list if given incorrect endpoint", () => {
+            return request(app)
+                .get("/api/article")
+                .expect(404)
+                .then(({body}) => {
+                    expect(body).toEqual({
+                        status: 404,
+                        msg: 'Not Found',
+                      })
+                })
+        })
     })
 
     describe("GET /api/articles/:article_id/comments", () => {
