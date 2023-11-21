@@ -5,7 +5,8 @@ const {
     findAllArticles,
     findAllCommentsFromArticle,
     addCommentToArticle,
-    updateVotes
+    updateVotes,
+    removeComment
 } = require("../models/app.model");
 
 exports.getTopics = (req, res, next) => {
@@ -71,6 +72,16 @@ exports.patchArticle = (req, res, next) => {
     const { body } = req
     updateVotes(body, article_id).then((updatedArticle) => {
         res.status(200).send(updatedArticle);
+    })
+    .catch((err) => {
+        next(err)
+    });
+}
+
+exports.deleteComment = (req, res, next) => {
+    const { comment_id } = req.params
+    removeComment(comment_id).then((deletedComment) => {
+        res.status(204).send(deletedComment);
     })
     .catch((err) => {
         next(err)
