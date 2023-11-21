@@ -4,7 +4,8 @@ const {
   getTopics,
   getApi,
   getArticles,
-  getArticleById
+  getArticleById,
+  getCommentsFromArticle
 } = require("./controllers/app.controller");
 
 const app = express();
@@ -18,6 +19,8 @@ app.get("/api", getApi)
 app.get("/api/articles/:article_id", getArticleById)
 
 app.get("/api/articles", getArticles)
+
+app.get("/api/articles/:article_id/comments", getCommentsFromArticle)
 
 app.use(handlePsqlErrors)
 app.use(handleCustomErrors)

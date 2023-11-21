@@ -13,10 +13,10 @@ exports.checkEndpoints = () => {
     const endpointsFilePath = path.join(__dirname, '../endpoints.json');
 
     return fs.readFile(endpointsFilePath, 'utf8')
-      .then(data => {
-        const endpointsDocs = JSON.parse(data);
-        return endpointsDocs
-      })
+        .then(data => {
+            const endpointsDocs = JSON.parse(data);
+            return endpointsDocs
+        })
 }
 
 exports.selectArticleById = (id) => {
@@ -24,12 +24,12 @@ exports.selectArticleById = (id) => {
         SELECT * FROM articles
         WHERE article_id = $1
     `, [id])
-    .then((result) => {
-        if(!result.rows.length) {
-          return Promise.reject({status: 404, msg: 'Article does not exist' })
-        }
-        return result
-      });
+        .then((result) => {
+            if (!result.rows.length) {
+                return Promise.reject({ status: 404, msg: 'Article does not exist' })
+            }
+            return result
+        });
 }
 
 exports.findAllArticles = () => {
@@ -40,4 +40,17 @@ exports.findAllArticles = () => {
     GROUP BY articles.article_id,articles.title,articles.topic,articles.author,articles.body,articles.created_at,articles.votes,articles.article_img_url
     ORDER BY created_at DESC;
     `)
+    .then(({ rows }) => {
+        return rows
+    })
+}
+
+exports.findAllCommentsFromArticle = (id) => {
+    return db.query(`
+        SELECT * FROM comments
+        WHERE article_id = $1;
+    `,[id])
+    .then(({ rows }) => {
+        return rows
+    })
 }

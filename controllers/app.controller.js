@@ -2,7 +2,8 @@ const {
     selectTopics,
     checkEndpoints,
     selectArticleById,
-    findAllArticles
+    findAllArticles,
+    findAllCommentsFromArticle
 } = require("../models/app.model");
 
 exports.getTopics = (req, res, next) => {
@@ -34,8 +35,18 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    findAllArticles().then(({ rows }) => {
-        res.status(200).send({articles: rows});
+    findAllArticles().then((articles) => {
+        res.status(200).send({articles});
+    })
+    .catch((err) => {
+        next(err)
+    });
+}
+
+exports.getCommentsFromArticle = (req, res, next) => {
+    const { article_id } = req.params
+    findAllCommentsFromArticle(article_id).then((comments) => {
+        res.status(200).send({comments, article_id});
     })
     .catch((err) => {
         next(err)

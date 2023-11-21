@@ -5,6 +5,8 @@ const seed = require("../db/seeds/seed")
 const index = require("../db/data/test-data/index")
 const fs = require('fs/promises');
 const path = require('path')
+const utils = require('../db/seeds/utils');
+const { at } = require("../db/data/test-data/articles");
 
 afterAll(() => {
     return db.end();
@@ -49,11 +51,19 @@ describe("Test for GET API", () => {
                 .get("/api/articles/1")
                 .expect(200)
                 .then(({ body }) => {
-                    const sqlQuery = db.query(`
-                        SELECT * FROM articles
-                        WHERE article_id = 1
-                    `)
-                    expect(body.article[0]).toMatchObject(sqlQuery);
+
+                    const exampleArticle = {
+                        article_id: 1,
+                        title: 'Living in the shadow of a great man',
+                        topic: 'mitch',
+                        author: 'butter_bridge',
+                        body: 'I find this existence challenging',
+                        created_at: '2020-07-09T21:11:00.000Z',
+                        votes: 100,
+                        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                      }
+
+                    expect(body.article[0]).toMatchObject(exampleArticle);
                 })
         })
         test("Returns 400 when given incorrect ID syntax ", () => {
@@ -79,14 +89,42 @@ describe("Test for GET API", () => {
                 .get("/api/articles")
                 .expect(200)
                 .then(({ body }) => {
-                    const sqlQuery = db.query(`
-                    SELECT articles.article_id,articles.title,articles.topic,articles.author,articles.body,articles.created_at,articles.votes,articles.article_img_url, COUNT(comments.article_id) AS comment_count
-                    FROM articles
-                    JOIN comments ON articles.article_id = comments.article_id
-                    GROUP BY articles.article_id,articles.title,articles.topic,articles.author,articles.body,articles.created_at,articles.votes,articles.article_img_url
-                    ORDER BY created_at DESC;
-                `)
-                    expect(body.articles[0]).toMatchObject(sqlQuery);
+
+                    const exampleArticle = {
+                        article_id: 3,
+                        title: 'Eight pug gifs that remind me of mitch',
+                        topic: 'mitch',
+                        author: 'icellusedkars',
+                        body: 'some gifs',
+                        created_at: '2020-11-03T09:12:00.000Z',
+                        votes: 0,
+                        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                        comment_count: '2'
+                      }
+
+                    expect(body.articles[0]).toMatchObject(exampleArticle);
+                })
+        })
+    })
+
+    describe.only("GET /api/articles/:article_id/comments", () => {
+        test("Returns all comments from given article with status code 200", () => {
+            return request(app)
+                .get("/api/articles/1/comments")
+                .expect(200)
+                .then(({ body }) => {
+                    const commentsSorted = []
+
+                    index.commentData.map((comment) => {
+                        if (comment.article_id == body.article_id) {
+                            const convertedTimeToDate =  utils.convertTimestampToDate(comment)
+                            const date = convertedTimeToDate['created_at']
+                            convertedTimeToDate['created_at'] = date.toISOString()
+                            commentsSorted.push(convertedTimeToDate)
+                        }
+                    })
+
+                    expect(body.comments).toMatchObject(commentsSorted);
                 })
         })
     })
