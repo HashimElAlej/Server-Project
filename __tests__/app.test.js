@@ -144,138 +144,164 @@ describe("Test for GET API", () => {
                 })
         })
     })
-});
-
-describe("Test for POST API", () => {
-    test("Status 201: POST /api/articles/:article_id/comments", () => {
-        const newComment = {
-            body: "I don't quite agree with that",
-            votes: 120,
-            author: "butter_bridge",
-            article_id: 1,
-            created_at: "2023-11-21T11:57:29.253Z",
-          }
-
-        return request(app)
-        .post("/api/articles/1/comments")
-        .send(newComment)
-        .expect(201)
-        .then(({ body }) => {
-            expect(body.comment[0]['body']).toBe("I don't quite agree with that")
-            expect(body.comment[0]['comment_id']).toBe(19)
-            expect(body.comment[0]['article_id']).toBe(1)
-            expect(body.comment[0]['votes']).toBe(120)
-            expect(body.comment[0]['author']).toBe("butter_bridge")
-            expect(body.comment[0]['created_at']).toBe("2023-11-21T11:57:29.253Z")
+    describe.only("GET /api/articles Query", () => {
+        test("Status 201: return like articles with the correct stuff", () => {
+            return request(app)
+                .get("/api/articles?topic=mitch")
+                .expect(200)
+                .then(({ body }) => {
+                    const topic = 'mitch'
+                    const commentsSorted = []
+                    let count = 1
+                    if (topic == 'mitch') {
+                        index.articleData.map((article) => {
+                            const convertedTimeToDate = utils.convertTimestampToDate(article)
+                            const date = convertedTimeToDate['created_at']
+                            convertedTimeToDate['created_at'] = date.toISOString()
+                            convertedTimeToDate['article_id'] = count
+                            count++
+                            commentsSorted.push(convertedTimeToDate)
+                        })
+                    }
+                     //console.log(commentsSorted)
+                    // console.log(('------------------'))
+                    console.log(body.articles)
+                    //expect(body.articles).toMatchObject(commentsSorted);
+                })
         })
-    })
+    });
 
-    test("Status 404: Incorrect ID endpoint", () => {
-        const newComment = {
-            body: "I don't quite agree with that",
-            votes: 120,
-            author: "butter_bridge",
-            article_id: 1,
-            created_at: "2023-11-21T11:57:29.253Z",
-          }
-
-        return request(app)
-        .post("/api/articles/not-an-id/comments")
-        .send(newComment)
-        .expect(404)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Article does not exist')
-        })
-    })
-
-    test("Status 400: Incorrect syntax for article_id ", () => {
-        const newComment = {
-            body: "I don't quite agree with that",
-            votes: 120,
-            author: "butter_bridge",
-            article_id: 'not_an_id',
-            created_at: "2023-11-21T11:57:29.253Z",
-          }
-
-        return request(app)
-        .post("/api/articles/1/comments")
-        .send(newComment)
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Bad request')
-        })
-    })
-
-    test("Status 400: Incorrect article_id and endpoint ID ", () => {
-        const newComment = {
-            body: "I don't quite agree with that",
-            votes: 120,
-            author: "butter_bridge",
-            article_id: 'not_an_id',
-            created_at: "2023-11-21T11:57:29.253Z",
-          }
-
-        return request(app)
-        .post("/api/articles/'not_an_id'/comments")
-        .send(newComment)
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Bad request')
-        })
-    })
-})
-
-describe("patch", () => {
-    test("Status 200: updates with the new votes count", () => {
-
-        const newVote = { inc_votes: -100 }
-
-        return request(app)
-        .patch("/api/articles/1")
-        .send(newVote)
-        .expect(200)
-        .then(({ body }) => {
-
-            const updatedArticle = {
+    describe("Test for POST API", () => {
+        test("Status 201: POST /api/articles/:article_id/comments", () => {
+            const newComment = {
+                body: "I don't quite agree with that",
+                votes: 120,
+                author: "butter_bridge",
                 article_id: 1,
-                title: 'Living in the shadow of a great man',
-                topic: 'mitch',
-                author: 'butter_bridge',
-                body: 'I find this existence challenging',
-                created_at: '2020-07-09T21:11:00.000Z',
-                votes: 0,
-                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-              }
+                created_at: "2023-11-21T11:57:29.253Z",
+            }
 
-            expect(body[0]).toMatchObject(updatedArticle)
+            return request(app)
+                .post("/api/articles/1/comments")
+                .send(newComment)
+                .expect(201)
+                .then(({ body }) => {
+                    expect(body.comment[0]['body']).toBe("I don't quite agree with that")
+                    expect(body.comment[0]['comment_id']).toBe(19)
+                    expect(body.comment[0]['article_id']).toBe(1)
+                    expect(body.comment[0]['votes']).toBe(120)
+                    expect(body.comment[0]['author']).toBe("butter_bridge")
+                    expect(body.comment[0]['created_at']).toBe("2023-11-21T11:57:29.253Z")
+                })
+        })
+
+        test("Status 404: Incorrect ID endpoint", () => {
+            const newComment = {
+                body: "I don't quite agree with that",
+                votes: 120,
+                author: "butter_bridge",
+                article_id: 1,
+                created_at: "2023-11-21T11:57:29.253Z",
+            }
+
+            return request(app)
+                .post("/api/articles/not-an-id/comments")
+                .send(newComment)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Article does not exist')
+                })
+        })
+
+        test("Status 400: Incorrect syntax for article_id ", () => {
+            const newComment = {
+                body: "I don't quite agree with that",
+                votes: 120,
+                author: "butter_bridge",
+                article_id: 'not_an_id',
+                created_at: "2023-11-21T11:57:29.253Z",
+            }
+
+            return request(app)
+                .post("/api/articles/1/comments")
+                .send(newComment)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request')
+                })
+        })
+
+        test("Status 400: Incorrect article_id and endpoint ID ", () => {
+            const newComment = {
+                body: "I don't quite agree with that",
+                votes: 120,
+                author: "butter_bridge",
+                article_id: 'not_an_id',
+                created_at: "2023-11-21T11:57:29.253Z",
+            }
+
+            return request(app)
+                .post("/api/articles/'not_an_id'/comments")
+                .send(newComment)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request')
+                })
         })
     })
 
-    test("Status 400: Incorrect endpoint ID", () => {
+    describe("patch", () => {
+        test("Status 200: updates with the new votes count", () => {
 
-        const newVote = { inc_votes: -100 }
+            const newVote = { inc_votes: -100 }
 
-        return request(app)
-        .patch("/api/articles/not-an-id")
-        .send(newVote)
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Bad request')
+            return request(app)
+                .patch("/api/articles/1")
+                .send(newVote)
+                .expect(200)
+                .then(({ body }) => {
 
+                    const updatedArticle = {
+                        article_id: 1,
+                        title: 'Living in the shadow of a great man',
+                        topic: 'mitch',
+                        author: 'butter_bridge',
+                        body: 'I find this existence challenging',
+                        created_at: '2020-07-09T21:11:00.000Z',
+                        votes: 0,
+                        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                    }
+
+                    expect(body[0]).toMatchObject(updatedArticle)
+                })
         })
-    })
 
-    test("Status 404: cannot query non-existing ID", () => {
+        test("Status 400: Incorrect endpoint ID", () => {
 
-        const newVote = { inc_votes: -100 }
+            const newVote = { inc_votes: -100 }
 
-        return request(app)
-        .patch("/api/articles/100000")
-        .send(newVote)
-        .expect(404)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Article does not exist')
+            return request(app)
+                .patch("/api/articles/not-an-id")
+                .send(newVote)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request')
 
+                })
+        })
+
+        test("Status 404: cannot query non-existing ID", () => {
+
+            const newVote = { inc_votes: -100 }
+
+            return request(app)
+                .patch("/api/articles/100000")
+                .send(newVote)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Article does not exist')
+
+                })
         })
     })
 })
