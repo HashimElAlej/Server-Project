@@ -279,3 +279,31 @@ describe("patch", () => {
         })
     })
 })
+
+describe("Delete API, deletes comments by comment ID", () => {
+    test("Status 200: comment with corresponding ID comment_id deleted", () => {
+        return request(app)
+        .delete("/api/comments/4")
+        .expect(204)
+        .then(({body}) => {
+            expect(body).toEqual({})
+        })
+    })
+    test("Status 404: comment with a non-existant ID" , () => {
+        return request(app)
+        .delete("/api/comments/454")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toEqual("Comment does not exist")
+        })
+    })
+
+    test("Status 400: comment with incorrect ID syntax" , () => {
+        return request(app)
+        .delete("/api/comments/false_id")
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toEqual("Bad request")
+        })
+    })
+})
