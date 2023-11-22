@@ -144,6 +144,44 @@ describe("Test for GET API", () => {
                 })
         })
     })
+    describe("GET request to recive data on users", () => {
+        test("Status 200: Array of user data returned", () => {
+
+            const users = [
+                {
+                    username: 'butter_bridge',
+                    name: 'jonny',
+                    avatar_url:
+                        'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+                },
+                {
+                    username: 'icellusedkars',
+                    name: 'sam',
+                    avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4'
+                },
+                {
+                    username: 'rogersop',
+                    name: 'paul',
+                    avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+                },
+                {
+                    username: 'lurker',
+                    name: 'do_nothing',
+                    avatar_url:
+                        'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png'
+                }
+            ]
+
+            return request(app)
+                .get("/api/users")
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body).toMatchObject(users)
+                });
+        })
+    })
+
+
 });
 
 describe("Test for POST API", () => {
@@ -154,20 +192,20 @@ describe("Test for POST API", () => {
             author: "butter_bridge",
             article_id: 1,
             created_at: "2023-11-21T11:57:29.253Z",
-          }
+        }
 
         return request(app)
-        .post("/api/articles/1/comments")
-        .send(newComment)
-        .expect(201)
-        .then(({ body }) => {
-            expect(body.comment[0]['body']).toBe("I don't quite agree with that")
-            expect(body.comment[0]['comment_id']).toBe(19)
-            expect(body.comment[0]['article_id']).toBe(1)
-            expect(body.comment[0]['votes']).toBe(120)
-            expect(body.comment[0]['author']).toBe("butter_bridge")
-            expect(body.comment[0]['created_at']).toBe("2023-11-21T11:57:29.253Z")
-        })
+            .post("/api/articles/1/comments")
+            .send(newComment)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.comment[0]['body']).toBe("I don't quite agree with that")
+                expect(body.comment[0]['comment_id']).toBe(19)
+                expect(body.comment[0]['article_id']).toBe(1)
+                expect(body.comment[0]['votes']).toBe(120)
+                expect(body.comment[0]['author']).toBe("butter_bridge")
+                expect(body.comment[0]['created_at']).toBe("2023-11-21T11:57:29.253Z")
+            })
     })
 
     test("Status 404: Incorrect ID endpoint", () => {
@@ -177,15 +215,15 @@ describe("Test for POST API", () => {
             author: "butter_bridge",
             article_id: 1,
             created_at: "2023-11-21T11:57:29.253Z",
-          }
+        }
 
         return request(app)
-        .post("/api/articles/not-an-id/comments")
-        .send(newComment)
-        .expect(404)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Article does not exist')
-        })
+            .post("/api/articles/not-an-id/comments")
+            .send(newComment)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Article does not exist')
+            })
     })
 
     test("Status 400: Incorrect syntax for article_id ", () => {
@@ -195,15 +233,15 @@ describe("Test for POST API", () => {
             author: "butter_bridge",
             article_id: 'not_an_id',
             created_at: "2023-11-21T11:57:29.253Z",
-          }
+        }
 
         return request(app)
-        .post("/api/articles/1/comments")
-        .send(newComment)
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Bad request')
-        })
+            .post("/api/articles/1/comments")
+            .send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request')
+            })
     })
 
     test("Status 400: Incorrect article_id and endpoint ID ", () => {
@@ -213,42 +251,42 @@ describe("Test for POST API", () => {
             author: "butter_bridge",
             article_id: 'not_an_id',
             created_at: "2023-11-21T11:57:29.253Z",
-          }
+        }
 
         return request(app)
-        .post("/api/articles/'not_an_id'/comments")
-        .send(newComment)
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Bad request')
-        })
+            .post("/api/articles/'not_an_id'/comments")
+            .send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request')
+            })
     })
 })
 
-describe("patch", () => {
+describe("Test for PATCH API", () => {
     test("Status 200: updates with the new votes count", () => {
 
         const newVote = { inc_votes: -100 }
 
         return request(app)
-        .patch("/api/articles/1")
-        .send(newVote)
-        .expect(200)
-        .then(({ body }) => {
+            .patch("/api/articles/1")
+            .send(newVote)
+            .expect(200)
+            .then(({ body }) => {
 
-            const updatedArticle = {
-                article_id: 1,
-                title: 'Living in the shadow of a great man',
-                topic: 'mitch',
-                author: 'butter_bridge',
-                body: 'I find this existence challenging',
-                created_at: '2020-07-09T21:11:00.000Z',
-                votes: 0,
-                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-              }
+                const updatedArticle = {
+                    article_id: 1,
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T21:11:00.000Z',
+                    votes: 0,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                }
 
-            expect(body[0]).toMatchObject(updatedArticle)
-        })
+                expect(body[0]).toMatchObject(updatedArticle)
+            })
     })
 
     test("Status 400: Incorrect endpoint ID", () => {
@@ -256,13 +294,13 @@ describe("patch", () => {
         const newVote = { inc_votes: -100 }
 
         return request(app)
-        .patch("/api/articles/not-an-id")
-        .send(newVote)
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Bad request')
+            .patch("/api/articles/not-an-id")
+            .send(newVote)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request')
 
-        })
+            })
     })
 
     test("Status 404: cannot query non-existing ID", () => {
@@ -270,12 +308,12 @@ describe("patch", () => {
         const newVote = { inc_votes: -100 }
 
         return request(app)
-        .patch("/api/articles/100000")
-        .send(newVote)
-        .expect(404)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Article does not exist')
+            .patch("/api/articles/100000")
+            .send(newVote)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Article does not exist')
 
-        })
+            })
     })
 })

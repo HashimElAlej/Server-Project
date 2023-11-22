@@ -5,7 +5,8 @@ const {
     findAllArticles,
     findAllCommentsFromArticle,
     addCommentToArticle,
-    updateVotes
+    updateVotes,
+    findAllUsers
 } = require("../models/app.model");
 
 exports.getTopics = (req, res, next) => {
@@ -71,6 +72,15 @@ exports.patchArticle = (req, res, next) => {
     const { body } = req
     updateVotes(body, article_id).then((updatedArticle) => {
         res.status(200).send(updatedArticle);
+    })
+    .catch((err) => {
+        next(err)
+    });
+}
+
+exports.getUsers = (req, res, next) => {
+    findAllUsers().then((userArray) => {
+        res.status(200).send(userArray);
     })
     .catch((err) => {
         next(err)
