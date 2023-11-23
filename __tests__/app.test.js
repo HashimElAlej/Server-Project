@@ -144,14 +144,14 @@ describe("Test for GET API", () => {
                 })
         })
     })
-    describe.only("GET /api/articles Query", () => {
+    describe("GET /api/articles Query", () => {
         test("Status 201: return like articles with the correct stuff", () => {
             return request(app)
                 .get("/api/articles?topic=mitch")
                 .expect(200)
                 .then(({ body }) => {
                     const topic = 'mitch'
-                    const commentsSorted = []
+                    const exampleUsers = []
                     let count = 1
                     if (topic == 'mitch') {
                         index.articleData.map((article) => {
@@ -160,13 +160,11 @@ describe("Test for GET API", () => {
                             convertedTimeToDate['created_at'] = date.toISOString()
                             convertedTimeToDate['article_id'] = count
                             count++
-                            commentsSorted.push(convertedTimeToDate)
+                            exampleUsers.push(convertedTimeToDate)
                         })
                     }
-                     //console.log(commentsSorted)
-                    // console.log(('------------------'))
-                    console.log(body.articles)
-                    //expect(body.articles).toMatchObject(commentsSorted);
+                    const sortedUsersArray = body.articles.sort((a, b) => a.article_id - b.article_id)
+                    expect(sortedUsersArray).toMatchObject(exampleUsers);
                 })
         })
     });
