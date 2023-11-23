@@ -79,8 +79,8 @@ exports.patchArticle = (req, res, next) => {
 }
 
 exports.getUsers = (req, res, next) => {
-    findAllUsers().then((userArray) => {
-        res.status(200).send(userArray);
+    findAllUsers().then((users) => {
+        res.status(200).send({users});
     })
     .catch((err) => {
         next(err)
