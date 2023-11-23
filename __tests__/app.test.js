@@ -145,21 +145,25 @@ describe("Test for GET API", () => {
         })
     })
     describe("GET /api/articles Query", () => {
-        test("Status 201: return like articles with the correct stuff", () => {
+        test("Status 200: return like articles with the correct stuff", () => {
             return request(app)
-                .get("/api/articles?topic=mitch")
+                .get("/api/articles?topic=paper")
                 .expect(200)
                 .then(({ body }) => {
-
-                    body.articles.forEach((article)=> {
-                        expect(article).toHaveProperty("article_id")
-                        expect(article).toHaveProperty("title")
-                        expect(article).toHaveProperty("topic")
-                        expect(article).toHaveProperty("author")
-                        expect(article).toHaveProperty("body")
-                        expect(article).toHaveProperty("created_at")
-                        expect(article).toHaveProperty("article_img_url")
-                    })
+                    if (body.articles.length) {
+                        body.articles.forEach((article) => {
+                            expect(article).toHaveProperty("article_id")
+                            expect(article).toHaveProperty("title")
+                            expect(article).toHaveProperty("topic")
+                            expect(article).toHaveProperty("author")
+                            expect(article).toHaveProperty("body")
+                            expect(article).toHaveProperty("created_at")
+                            expect(article).toHaveProperty("article_img_url")
+                        })
+                    } 
+                    else {
+                       expect(body.articles).toEqual([])
+                    }
                 })
         })
         test("Status 404: non existant topic", () => {
@@ -170,6 +174,7 @@ describe("Test for GET API", () => {
                     expect(body.msg).toBe('Topic does not exist')
                 })
         })
+
     });
 
     describe("Test for POST API", () => {
