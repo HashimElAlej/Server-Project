@@ -104,7 +104,7 @@ exports.filterArticlesByTopic = (query) => {
     `, [query])
         .then(({ rows }) => {
             if (!rows.length) {
-                return Promise.reject({ status: 404, msg: 'Article does not exist' })
+                return Promise.reject({ status: 404, msg: 'Topic does not exist' })
             }
             return rows
         })

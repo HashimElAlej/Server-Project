@@ -38,15 +38,16 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    const { topic } = req.query
-    if (topic) {
-        filterArticlesByTopic(topic)
-    }
-    findAllArticles().then((articles) => {
-        res.status(200).send({ articles });
-    })
+    const { topic } = req.query;
+
+    const articlesPromise = topic ? filterArticlesByTopic(topic) : findAllArticles();
+
+    articlesPromise
+        .then((articles) => {
+            res.status(200).send({ articles });
+        })
         .catch((err) => {
-            next(err)
+            next(err);
         });
 }
 

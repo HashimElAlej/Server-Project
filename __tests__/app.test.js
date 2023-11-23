@@ -150,21 +150,24 @@ describe("Test for GET API", () => {
                 .get("/api/articles?topic=mitch")
                 .expect(200)
                 .then(({ body }) => {
-                    const topic = 'mitch'
-                    const exampleUsers = []
-                    let count = 1
-                    if (topic == 'mitch') {
-                        index.articleData.map((article) => {
-                            const convertedTimeToDate = utils.convertTimestampToDate(article)
-                            const date = convertedTimeToDate['created_at']
-                            convertedTimeToDate['created_at'] = date.toISOString()
-                            convertedTimeToDate['article_id'] = count
-                            count++
-                            exampleUsers.push(convertedTimeToDate)
-                        })
-                    }
-                    const sortedUsersArray = body.articles.sort((a, b) => a.article_id - b.article_id)
-                    expect(sortedUsersArray).toMatchObject(exampleUsers);
+
+                    body.articles.forEach((article)=> {
+                        expect(article).toHaveProperty("article_id")
+                        expect(article).toHaveProperty("title")
+                        expect(article).toHaveProperty("topic")
+                        expect(article).toHaveProperty("author")
+                        expect(article).toHaveProperty("body")
+                        expect(article).toHaveProperty("created_at")
+                        expect(article).toHaveProperty("article_img_url")
+                    })
+                })
+        })
+        test("Status 404: non existant topic", () => {
+            return request(app)
+                .get("/api/articles?topic=65765")
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Topic does not exist')
                 })
         })
     });
