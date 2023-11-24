@@ -124,3 +124,6 @@ exports.filterArticlesByTopic = (query) => {
             return rows
         })
 };
+
+
+

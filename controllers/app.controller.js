@@ -7,7 +7,7 @@ const {
     addCommentToArticle,
     updateVotes,
     findAllUsers,
-    filterArticlesByTopic
+    filterArticlesByTopic,
 
 } = require("../models/app.model");
 
@@ -42,7 +42,7 @@ exports.getArticleById = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
     const { topic } = req.query;
 
-    const articlesPromise = topic ? filterArticlesByTopic(topic) : findAllArticles();
+    let articlesPromise = topic ? filterArticlesByTopic(topic) : findAllArticles();
 
     articlesPromise
         .then((articles) => {
