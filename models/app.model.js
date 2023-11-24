@@ -103,3 +103,24 @@ exports.findAllUsers = () => {
             return rows
         })
 }
+
+exports.filterArticlesByTopic = (query) => {
+    return db.query(`
+    SELECT * FROM topics
+    WHERE topics.slug = $1
+    `, [query])
+    .then(({rows}) => {
+        if (!rows.length) {
+            return Promise.reject({ status: 404, msg: 'Topic does not exist' })
+        }
+    })
+    .then(() => {
+        return db.query(`
+        SELECT * FROM articles
+        WHERE articles.topic = $1
+        `, [query]) 
+    })
+    .then(({rows}) => {
+        return rows
+    })
+};
