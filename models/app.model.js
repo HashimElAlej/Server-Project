@@ -40,9 +40,9 @@ exports.findAllArticles = () => {
     GROUP BY articles.article_id,articles.title,articles.topic,articles.author,articles.body,articles.created_at,articles.votes,articles.article_img_url
     ORDER BY created_at DESC;
     `)
-        .then(({ rows }) => {
-            return rows
-        })
+    .then(({ rows }) => {
+        return rows
+    })
 }
 
 exports.findAllCommentsFromArticle = (id) => {
@@ -109,18 +109,18 @@ exports.filterArticlesByTopic = (query) => {
     SELECT * FROM topics
     WHERE topics.slug = $1
     `, [query])
-    .then(({rows}) => {
-        if (!rows.length) {
-            return Promise.reject({ status: 404, msg: 'Topic does not exist' })
-        }
-    })
-    .then(() => {
-        return db.query(`
+        .then(({ rows }) => {
+            if (!rows.length) {
+                return Promise.reject({ status: 404, msg: 'Topic does not exist' })
+            }
+        })
+        .then(() => {
+            return db.query(`
         SELECT * FROM articles
         WHERE articles.topic = $1
-        `, [query]) 
-    })
-    .then(({rows}) => {
-        return rows
-    })
+        `, [query])
+        })
+        .then(({ rows }) => {
+            return rows
+        })
 };

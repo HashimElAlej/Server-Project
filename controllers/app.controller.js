@@ -32,11 +32,11 @@ exports.getApi = (req, res, next) => {
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params
     selectArticleById(article_id).then(({ rows }) => {
-        res.status(200).send({ article: rows });
+        res.status(200).send({article: rows});
     })
-        .catch((err) => {
-            next(err)
-        });
+    .catch((err) => {
+        next(err)
+    });
 }
 
 exports.getArticles = (req, res, next) => {

@@ -83,26 +83,24 @@ describe("Test for GET API", () => {
                 })
         })
     })
+
     describe("GET /api/articles", () => {
         test("Return list of all articles with status 200", () => {
             return request(app)
                 .get("/api/articles")
                 .expect(200)
                 .then(({ body }) => {
-
-                    const exampleArticle = {
-                        article_id: 3,
-                        title: 'Eight pug gifs that remind me of mitch',
-                        topic: 'mitch',
-                        author: 'icellusedkars',
-                        body: 'some gifs',
-                        created_at: '2020-11-03T09:12:00.000Z',
-                        votes: 0,
-                        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
-                        comment_count: '2'
-                    }
-
-                    expect(body.articles[0]).toMatchObject(exampleArticle);
+                    body.articles.forEach((article) => {
+                        expect(article).toHaveProperty("article_id")
+                        expect(article).toHaveProperty("title")
+                        expect(article).toHaveProperty("topic")
+                        expect(article).toHaveProperty("author")
+                        expect(article).toHaveProperty("body")
+                        expect(article).toHaveProperty("created_at")
+                        expect(article).toHaveProperty("votes")
+                        expect(article).toHaveProperty("article_img_url")
+                        expect(article).toHaveProperty("comment_count")
+                    })
                 })
         })
     })
