@@ -160,7 +160,7 @@ describe("Test for GET API", () => {
     })
 
 
-    describe("GET /api/articles Query", () => {
+    describe("GET: filter articles by certain topic", () => {
         test("Status 200: return like articles with the correct stuff", () => {
             return request(app)
                 .get("/api/articles?topic=paper")
