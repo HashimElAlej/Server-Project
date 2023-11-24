@@ -125,5 +125,23 @@ exports.filterArticlesByTopic = (query) => {
         })
 };
 
+exports.filterByColumn = (sort = 'created_at', order = 'DESC') => {
 
+    const validColumns = ['author', 'title', 'created_at', 'votes', 'topic', 'body', 'article_img_url']
+    const validOrder = ['ASC','asc','DESC','desc']
+
+    if (!validColumns.includes(sort) || !validOrder.includes(order)) {
+        return Promise.reject({ status: 400, msg: 'Invalid sort column or order' });
+    }
+
+    return db.query(`
+        SELECT ${sort}
+        FROM articles
+        ORDER BY ${sort} ${order.toUpperCase()}
+    `)
+    .then(({rows}) => {
+        return rows
+    })
+
+}
 

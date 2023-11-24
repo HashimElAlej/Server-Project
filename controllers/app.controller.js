@@ -8,6 +8,7 @@ const {
     updateVotes,
     findAllUsers,
     filterArticlesByTopic,
+    filterByColumn
 
 } = require("../models/app.model");
 
@@ -40,9 +41,13 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    const { topic } = req.query;
+    const { topic, sort_by, order } = req.query;
 
     let articlesPromise = topic ? filterArticlesByTopic(topic) : findAllArticles();
+
+    if (sort_by && order) {
+        articlesPromise = filterByColumn(sort_by,order);
+    }
 
     articlesPromise
         .then((articles) => {
@@ -52,6 +57,7 @@ exports.getArticles = (req, res, next) => {
             next(err);
         });
 }
+
 
 exports.getCommentsFromArticle = (req, res, next) => {
     const { article_id } = req.params

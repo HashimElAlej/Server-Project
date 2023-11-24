@@ -156,8 +156,6 @@ describe("Test for GET API", () => {
                 });
         })
     })
-
-
     describe("GET: filter articles by certain topic", () => {
         test("Status 200: return like articles with the correct stuff", () => {
             return request(app)
@@ -189,7 +187,35 @@ describe("Test for GET API", () => {
                 })
         })
     });
-    
+    describe("/api/articles sorting queries", () => {
+        test("Status 200: articles sorted by column and order", () => {
+            return request(app)
+                .get("/api/articles?sort_by=votes&order=asc")
+                .expect(200)
+                .then(({ body }) => {
+                    const sortByProperty = 'votes'
+                    body.articles.forEach((articleColumn) => {
+                        expect(articleColumn).toHaveProperty(sortByProperty)
+                    })
+                });
+        })
+        test("Status 400: incorrect sort_by", () => {
+            return request(app)
+                .get("/api/articles?sort_by=vots&order=ASC")
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Invalid sort column or order')
+                });
+        })
+        test("Status 400: incorrect parameters for both queries", () => {
+            return request(app)
+                .get("/api/articles?sort_by=vots&order=AC")
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Invalid sort column or order')
+                });
+        })
+    })  
 });
 
 describe("Test for POST API", () => {
