@@ -8,6 +8,7 @@ const {
     updateVotes,
     findAllUsers,
     filterArticlesByTopic,
+    updateComment
 
 } = require("../models/app.model");
 
@@ -32,11 +33,11 @@ exports.getApi = (req, res, next) => {
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params
     selectArticleById(article_id).then(({ rows }) => {
-        res.status(200).send({article: rows});
+        res.status(200).send({ article: rows });
     })
-    .catch((err) => {
-        next(err)
-    });
+        .catch((err) => {
+            next(err)
+        });
 }
 
 exports.getArticles = (req, res, next) => {
@@ -88,6 +89,17 @@ exports.patchArticle = (req, res, next) => {
 exports.getUsers = (req, res, next) => {
     findAllUsers().then((users) => {
         res.status(200).send({ users });
+    })
+        .catch((err) => {
+            next(err)
+        });
+}
+
+exports.patchCommentById = (req, res, next) => {
+    const { comment_id } = req.params
+    const { body } = req
+    updateComment(body, comment_id).then((updatedVotes) => {
+        res.status(200).send( {updatedVotes} );
     })
         .catch((err) => {
             next(err)
