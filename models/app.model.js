@@ -40,9 +40,9 @@ exports.findAllArticles = () => {
     GROUP BY articles.article_id,articles.title,articles.topic,articles.author,articles.body,articles.created_at,articles.votes,articles.article_img_url
     ORDER BY created_at DESC;
     `)
-    .then(({ rows }) => {
-        return rows
-    })
+        .then(({ rows }) => {
+            return rows
+        })
 }
 
 exports.findAllCommentsFromArticle = (id) => {
@@ -125,18 +125,32 @@ exports.filterArticlesByTopic = (query) => {
         })
 };
 
-exports.updateComment = (votes,id) => {
+exports.updateComment = (votes, id) => {
     return db.query(`
     UPDATE comments
     SET votes = votes + $1
     WHERE comment_id = $2 RETURNING *
     `, [votes.inc_votes, id])
-    .then(({ rows }) => {
-        if (!rows.length) {
-            return Promise.reject({ status: 404, msg: 'comment does not exist' })
-        }
-        return rows
-    })
+        .then(({ rows }) => {
+            if (!rows.length) {
+                return Promise.reject({ status: 404, msg: 'comment does not exist' })
+            }
+            return rows
+        })
 };
+
+exports.findCommentById = (id) => {
+    return db.query(`
+        SELECT * FROM comments
+        WHERE comment_id = $1;
+    `, [id])
+        .then(({ rows }) => {
+            if (!rows.length) {
+                return Promise.reject({ status: 404, msg: 'comment does not exist' })
+            }
+            return rows
+        })
+}
+
 
 

@@ -190,6 +190,16 @@ describe("Test for GET API", () => {
         })
     });
 
+    describe("GET: ", () => {
+        test("", () => {
+            return request(app)
+                .get("/api/comments/1")
+                .expect(200)
+                .then(({ body }) => {
+                    console.log(body)
+                })
+        })
+    });
 });
 
 describe("Test for POST API", () => {
@@ -273,26 +283,26 @@ describe("Test for POST API", () => {
 
 describe("Test for PATCH API", () => {
 
-    describe.only('', () => {
+    describe('', () => {
         test('', () => {
             const newVote = { inc_votes: -16 }
-            
-            return request(app)
-            .patch("/api/comments/1")
-            .send(newVote)
-            .expect(200)
-            .then(({ body }) => {
-                const updatedArticle = {
-                    comment_id: 1,
-                    body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-                    votes: 0,
-                    author: 'butter_bridge',
-                    article_id: 9,
-                    created_at: '2020-04-06T13:17:00.000Z',
-                }
 
-                expect(body.updatedVotes[0]).toMatchObject(updatedArticle)
-            })
+            return request(app)
+                .patch("/api/comments/1")
+                .send(newVote)
+                .expect(200)
+                .then(({ body }) => {
+                    const updatedArticle = {
+                        comment_id: 1,
+                        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                        votes: 0,
+                        author: 'butter_bridge',
+                        article_id: 9,
+                        created_at: '2020-04-06T13:17:00.000Z',
+                    }
+
+                    expect(body.updatedVotes[0]).toMatchObject(updatedArticle)
+                })
         })
     })
 

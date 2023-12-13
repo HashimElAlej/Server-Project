@@ -8,7 +8,8 @@ const {
     updateVotes,
     findAllUsers,
     filterArticlesByTopic,
-    updateComment
+    updateComment,
+    findCommentById
 
 } = require("../models/app.model");
 
@@ -100,6 +101,16 @@ exports.patchCommentById = (req, res, next) => {
     const { body } = req
     updateComment(body, comment_id).then((updatedVotes) => {
         res.status(200).send( {updatedVotes} );
+    })
+        .catch((err) => {
+            next(err)
+        });
+}
+
+exports.getCommentById = (req, res, next) => {
+    const { comment_id } = req.params
+    findCommentById(comment_id).then((comment) => {
+        res.status(200).send({ comment });
     })
         .catch((err) => {
             next(err)
