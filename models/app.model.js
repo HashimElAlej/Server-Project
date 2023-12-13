@@ -133,7 +133,7 @@ exports.updateComment = (votes,id) => {
     `, [votes.inc_votes, id])
     .then(({ rows }) => {
         if (!rows.length) {
-            return Promise.reject({ status: 404, msg: 'Topic does not exist' })
+            return Promise.reject({ status: 404, msg: 'comment does not exist' })
         }
         return rows
     })

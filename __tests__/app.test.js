@@ -282,7 +282,6 @@ describe("Test for PATCH API", () => {
             .send(newVote)
             .expect(200)
             .then(({ body }) => {
-                console.log(body)
                 const updatedArticle = {
                     comment_id: 1,
                     body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
