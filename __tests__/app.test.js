@@ -190,7 +190,7 @@ describe("Test for GET API", () => {
         })
     });
 
-    describe("GET: ", () => {
+    describe("GET:idk ", () => {
         test("", () => {
             return request(app)
                 .get("/api/comments/1")
@@ -200,6 +200,18 @@ describe("Test for GET API", () => {
                 })
         })
     });
+
+    describe("GET: ", () => {
+        test("", () => {
+            return request(app)
+                .get("/api/articles?sort_by=desc")
+                .expect(200)
+                .then(({ body }) => {
+                    console.log(body)
+                })
+        })
+    });
+
 });
 
 describe("Test for POST API", () => {
